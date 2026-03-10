@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+## Description: Run Mago PHP toolchain (lint, format, analyze, check)
+## Usage: mago [command] [flags] [paths]
+## Example: "ddev mago lint" or "ddev mago format --check" or "ddev mago analyze"
+
+mago "$@"

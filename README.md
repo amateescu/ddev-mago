@@ -3,11 +3,9 @@
 [![last commit](https://img.shields.io/github/last-commit/amateescu/ddev-mago)](https://github.com/amateescu/ddev-mago/commits)
 [![release](https://img.shields.io/github/v/release/amateescu/ddev-mago)](https://github.com/amateescu/ddev-mago/releases/latest)
 
-# DDEV Mago
+# ddev-mago
 
-## Overview
-
-This add-on integrates Mago into your [DDEV](https://ddev.com/) project.
+DDEV add-on for [Mago](https://github.com/carthage-software/mago) — the blazing-fast PHP linter, formatter, and static analyzer written in Rust.
 
 ## Installation
 
@@ -16,32 +14,33 @@ ddev add-on get amateescu/ddev-mago
 ddev restart
 ```
 
-After installation, make sure to commit the `.ddev` directory to version control.
-
 ## Usage
 
-| Command | Description |
-| ------- | ----------- |
-| `ddev describe` | View service status and used ports for Mago |
-| `ddev logs -s mago` | Check Mago logs |
+```bash
+ddev mago lint                    # Lint the project
+ddev mago lint --fix              # Auto-fix lint issues
+ddev mago format                  # Format code
+ddev mago format --check          # Check formatting without writing
+ddev mago analyze                 # Run static analysis
+ddev mago --version               # Show installed version
+```
 
-## Advanced Customization
+## Pinning a Mago version
 
-To change the Docker image:
+By default, the add-on installs the latest Mago release. To pin a specific version:
 
 ```bash
-ddev dotenv set .ddev/.env.mago --mago-docker-image="ddev/ddev-utilities:latest"
+ddev dotenv set .ddev/.env.mago --mago-version=0.0.22
 ddev add-on get amateescu/ddev-mago
 ddev restart
 ```
 
 Make sure to commit the `.ddev/.env.mago` file to version control.
 
-All customization options (use with caution):
+## Configuration
 
-| Variable | Flag | Default |
-| -------- | ---- | ------- |
-| `MAGO_DOCKER_IMAGE` | `--mago-docker-image` | `ddev/ddev-utilities:latest` |
+Mago is configured via a `mago.toml` file in your project root.
+See the [Mago documentation](https://mago.carthage.software) for all available options.
 
 ## Credits
 

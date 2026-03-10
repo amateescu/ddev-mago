@@ -39,17 +39,9 @@ setup() {
 }
 
 health_checks() {
-  # Do something useful here that verifies the add-on
-
-  # You can check for specific information in headers:
-  # run curl -sfI https://${PROJNAME}.ddev.site
-  # assert_output --partial "HTTP/2 200"
-  # assert_output --partial "test_header"
-
-  # Or check if some command gives expected output:
-  DDEV_DEBUG=true run ddev launch
+  run ddev mago --version
   assert_success
-  assert_output --partial "FULLURL https://${PROJNAME}.ddev.site"
+  assert_output --partial "mago"
 }
 
 teardown() {
@@ -72,6 +64,26 @@ teardown() {
   run ddev restart -y
   assert_success
   health_checks
+}
+
+@test "mago lint help works" {
+  set -eu -o pipefail
+  run ddev add-on get "${DIR}"
+  assert_success
+  run ddev restart -y
+  assert_success
+  run ddev mago lint --help
+  assert_success
+}
+
+@test "mago format help works" {
+  set -eu -o pipefail
+  run ddev add-on get "${DIR}"
+  assert_success
+  run ddev restart -y
+  assert_success
+  run ddev mago format --help
+  assert_success
 }
 
 # bats test_tags=release

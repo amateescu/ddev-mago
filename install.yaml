@@ -1,6 +1,23 @@
 name: mago
 
-project_files:
-  - docker-compose.mago.yaml
+post_install_actions:
+  - |
+    #ddev-description: Install mago binary into web container
+    if [ -z "${MAGO_VERSION:-}" ]; then
+      MAGO_VERSION=$(curl -fsSL https://api.github.com/repos/carthage-software/mago/releases/latest | grep '"tag_name"' | cut -d '"' -f4)
+    fi
+    ARCH=$(uname -m)
+    if [ "$ARCH" = "aarch64" ]; then
+      TARGET="aarch64-unknown-linux-musl"
+    else
+      TARGET="x86_64-unknown-linux-musl"
+    fi
+    curl -fsSL "https://github.com/carthage-software/mago/releases/download/${MAGO_VERSION}/mago-${TARGET}.tar.gz" \
+      | tar -xz -C /usr/local/bin mago
+    chmod +x /usr/local/bin/mago
 
-ddev_version_constraint: '>= v1.24.3'
+project_files:
+  - commands/web/mago
+
+removal_actions:
+  - ddev exec rm -f /usr/local/bin/mago
