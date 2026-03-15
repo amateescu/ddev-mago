@@ -16,8 +16,11 @@ hooks:
           else
             TARGET="x86_64-unknown-linux-musl"
           fi
-          curl -fsSL "https://github.com/carthage-software/mago/releases/download/${MAGO_VERSION}/mago-${MAGO_VERSION}-${TARGET}.tar.gz" \
-            | tar -xz -C /usr/local/bin --strip-components=1 "mago-${MAGO_VERSION}-${TARGET}/mago"
+          if ! curl -fsSL "https://github.com/carthage-software/mago/releases/download/${MAGO_VERSION}/mago-${MAGO_VERSION}-${TARGET}.tar.gz" \
+            | tar -xz -C /usr/local/bin --strip-components=1 "mago-${MAGO_VERSION}-${TARGET}/mago"; then
+            echo "Failed to install mago version $MAGO_VERSION. Check that this version exists."
+            exit 1
+          fi
           chmod +x /usr/local/bin/mago
           exit 0
         fi

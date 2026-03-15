@@ -7,3 +7,5 @@ project_files:
 
 removal_actions:
   - rm web-build/Dockerfile.mago
+  - rm config.mago.yaml
+  - rm -f addon-metadata/mago/.latest_version
