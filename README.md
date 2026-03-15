@@ -27,7 +27,7 @@ ddev mago --version               # Show installed version
 
 ## Updating
 
-The add-on checks for new Mago releases on `ddev start` (once per day) and notifies you when an update is available. To update:
+The add-on checks for new Mago releases on `ddev start` and notifies you when an update is available. To update:
 
 ```bash
 ddev add-on get amateescu/ddev-mago

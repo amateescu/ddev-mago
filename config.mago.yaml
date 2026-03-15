@@ -25,22 +25,8 @@ hooks:
           exit 0
         fi
 
-        # Otherwise, check for updates (cached, once per day).
-        CACHE_FILE="/mnt/ddev_config/addon-metadata/mago/.latest_version"
-        CACHE_MAX_AGE=86400
-        LATEST=""
-        if [ -f "$CACHE_FILE" ]; then
-          CACHE_AGE=$(( $(date +%s) - $(stat -c %Y "$CACHE_FILE") ))
-          if [ "$CACHE_AGE" -lt "$CACHE_MAX_AGE" ]; then
-            LATEST=$(cat "$CACHE_FILE")
-          fi
-        fi
-        if [ -z "$LATEST" ]; then
-          LATEST=$(curl -fsSL https://api.github.com/repos/carthage-software/mago/releases/latest 2>/dev/null | grep '"tag_name"' | cut -d '"' -f4)
-          if [ -n "$LATEST" ]; then
-            echo "$LATEST" > "$CACHE_FILE"
-          fi
-        fi
+        # Otherwise, check for updates.
+        LATEST=$(curl -fsSL https://api.github.com/repos/carthage-software/mago/releases/latest 2>/dev/null | grep '"tag_name"' | cut -d '"' -f4)
         if [ -n "$LATEST" ] && [ "$CURRENT" != "$LATEST" ]; then
           echo "A new version of mago is available: $LATEST (current: $CURRENT)"
           echo "Run 'ddev add-on get amateescu/ddev-mago && ddev restart' to update."
