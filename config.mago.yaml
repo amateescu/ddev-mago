@@ -1,0 +1,47 @@
+#ddev-generated
+hooks:
+  post-start:
+    - exec: |
+        CURRENT=$(mago --version 2>/dev/null | awk '{print $2}')
+        if [ -z "$CURRENT" ]; then
+          exit 0
+        fi
+
+        # If a specific version is pinned and it doesn't match, install it.
+        if [ -n "${MAGO_VERSION:-}" ] && [ "$CURRENT" != "$MAGO_VERSION" ]; then
+          echo "Installing pinned mago version $MAGO_VERSION (current: $CURRENT)..."
+          ARCH=$(uname -m)
+          if [ "$ARCH" = "aarch64" ]; then
+            TARGET="aarch64-unknown-linux-musl"
+          else
+            TARGET="x86_64-unknown-linux-musl"
+          fi
+          if ! curl -fsSL "https://github.com/carthage-software/mago/releases/download/${MAGO_VERSION}/mago-${MAGO_VERSION}-${TARGET}.tar.gz" \
+            | tar -xz -C /usr/local/bin --strip-components=1 "mago-${MAGO_VERSION}-${TARGET}/mago"; then
+            echo "Failed to install mago version $MAGO_VERSION. Check that this version exists."
+            exit 1
+          fi
+          chmod +x /usr/local/bin/mago
+          exit 0
+        fi
+
+        # Otherwise, check for updates (cached, once per day).
+        CACHE_FILE="/mnt/ddev_config/addon-metadata/mago/.latest_version"
+        CACHE_MAX_AGE=86400
+        LATEST=""
+        if [ -f "$CACHE_FILE" ]; then
+          CACHE_AGE=$(( $(date +%s) - $(stat -c %Y "$CACHE_FILE") ))
+          if [ "$CACHE_AGE" -lt "$CACHE_MAX_AGE" ]; then
+            LATEST=$(cat "$CACHE_FILE")
+          fi
+        fi
+        if [ -z "$LATEST" ]; then
+          LATEST=$(curl -fsSL https://api.github.com/repos/carthage-software/mago/releases/latest 2>/dev/null | grep '"tag_name"' | cut -d '"' -f4)
+          if [ -n "$LATEST" ]; then
+            echo "$LATEST" > "$CACHE_FILE"
+          fi
+        fi
+        if [ -n "$LATEST" ] && [ "$CURRENT" != "$LATEST" ]; then
+          echo "A new version of mago is available: $LATEST (current: $CURRENT)"
+          echo "Run 'ddev add-on get amateescu/ddev-mago && ddev restart' to update."
+        fi

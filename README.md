@@ -25,17 +25,32 @@ ddev mago analyze                 # Run static analysis
 ddev mago --version               # Show installed version
 ```
 
-## Pinning a Mago version
+## Updating
 
-By default, the add-on installs the latest Mago release. To pin a specific version:
+The add-on checks for new Mago releases on `ddev start` (once per day) and notifies you when an update is available. To update:
 
 ```bash
-ddev dotenv set .ddev/.env.mago --mago-version=0.0.22
 ddev add-on get amateescu/ddev-mago
 ddev restart
 ```
 
-Make sure to commit the `.ddev/.env.mago` file to version control.
+## Pinning a Mago version
+
+By default, the add-on installs the latest Mago release. To pin a specific version, add `MAGO_VERSION` to `web_environment` in your `.ddev/config.yaml`:
+
+```yaml
+web_environment:
+  - MAGO_VERSION=1.14.1
+```
+
+Then restart: `ddev restart`
+
+To unpin and go back to the latest version, remove the `MAGO_VERSION` entry and run:
+
+```bash
+ddev add-on get amateescu/ddev-mago
+ddev restart
+```
 
 ## Configuration
 
