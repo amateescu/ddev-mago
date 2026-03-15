@@ -3,6 +3,7 @@ name: mago
 project_files:
   - commands/web/mago
   - web-build/Dockerfile.mago
+  - config.mago.yaml
 
 removal_actions:
   - rm web-build/Dockerfile.mago
