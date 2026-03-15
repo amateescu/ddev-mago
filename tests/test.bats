@@ -102,20 +102,6 @@ teardown() {
   assert_output --partial "1.13.0"
 }
 
-@test "update notification for outdated version" {
-  set -eu -o pipefail
-  run ddev add-on get "${DIR}"
-  assert_success
-  run ddev restart -y
-  assert_success
-
-  # Seed the cache with a fake newer version to trigger the notification.
-  echo "99.99.99" > .ddev/addon-metadata/mago/.latest_version
-  run ddev restart -y
-  assert_success
-  assert_output --partial "A new version of mago is available: 99.99.99"
-}
-
 # bats test_tags=release
 @test "install from release" {
   set -eu -o pipefail

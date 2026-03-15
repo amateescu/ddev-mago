@@ -1,8 +1,5 @@
 #ddev-generated
-ARG MAGO_VERSION=""
-RUN if [ -z "${MAGO_VERSION}" ]; then \
-      MAGO_VERSION=$(curl -fsSL https://api.github.com/repos/carthage-software/mago/releases/latest | grep '"tag_name"' | cut -d '"' -f4); \
-    fi && \
+RUN MAGO_VERSION=$(curl -fsSL https://api.github.com/repos/carthage-software/mago/releases/latest | grep '"tag_name"' | cut -d '"' -f4) && \
     ARCH=$(uname -m) && \
     if [ "$ARCH" = "aarch64" ]; then \
       TARGET="aarch64-unknown-linux-musl"; \
