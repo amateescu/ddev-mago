@@ -23,17 +23,17 @@ hooks:
         }
 
         # If a specific version is pinned and it doesn't match, install it.
-        if [ -n "${MAGO_VERSION:-}" ] && [ "$CURRENT" != "$MAGO_VERSION" ]; then
-          echo "Installing pinned mago version $MAGO_VERSION (current: $CURRENT)..."
-          if ! install_mago "$MAGO_VERSION"; then
-            echo "Failed to install mago version $MAGO_VERSION. Check that this version exists."
+        if [ -n "${DDEV_MAGO_VERSION:-}" ] && [ "$CURRENT" != "$DDEV_MAGO_VERSION" ]; then
+          echo "Installing pinned mago version $DDEV_MAGO_VERSION (current: $CURRENT)..."
+          if ! install_mago "$DDEV_MAGO_VERSION"; then
+            echo "Failed to install mago version $DDEV_MAGO_VERSION. Check that this version exists."
             exit 1
           fi
           exit 0
         fi
 
         # Otherwise, check for updates and install if available.
-        if [ -z "${MAGO_VERSION:-}" ]; then
+        if [ -z "${DDEV_MAGO_VERSION:-}" ]; then
           LATEST=$(curl -fsSL https://api.github.com/repos/carthage-software/mago/releases/latest 2>/dev/null | grep '"tag_name"' | cut -d '"' -f4)
           if [ -n "$LATEST" ] && [ "$CURRENT" != "$LATEST" ]; then
             echo "Updating mago from $CURRENT to $LATEST..."

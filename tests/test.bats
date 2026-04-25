@@ -94,12 +94,12 @@ teardown() {
   assert_success
 
   # Pin an older version.
-  echo -e "web_environment:\n  - MAGO_VERSION=1.13.0" > .ddev/config.mago-test.yaml
+  echo -e "web_environment:\n  - DDEV_MAGO_VERSION=1.22.0" > .ddev/config.mago-test.yaml
   run ddev restart -y
   assert_success
   run ddev mago --version
   assert_success
-  assert_output --partial "1.13.0"
+  assert_output --partial "1.22.0"
 }
 
 # bats test_tags=release
