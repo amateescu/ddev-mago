@@ -27,20 +27,18 @@ ddev mago --version               # Show installed version
 
 ## Updating
 
-The mago binary is automatically updated to the latest release on every `ddev start`.
+Run `ddev debug rebuild` to refresh the mago binary to the current `:latest`.
 
 ## Pinning a Mago version
 
-To pin a specific version, add `DDEV_MAGO_VERSION` to `web_environment` in your `.ddev/config.yaml`:
-
-```yaml
-web_environment:
-  - DDEV_MAGO_VERSION=1.24.0
+```bash
+ddev pin-mago-version 1.18.1   # pin to a specific version
+ddev pin-mago-version latest   # unpin
+ddev restart                   # apply
 ```
 
-Then restart: `ddev restart`
-
-To unpin and go back to the latest version, remove the `DDEV_MAGO_VERSION` entry and restart.
+`pin-mago-version` rewrites `.ddev/web-build/Dockerfile.mago` and removes its
+`#ddev-generated` marker, so future add-on updates won't overwrite the pin.
 
 ## Configuration
 
