@@ -2,9 +2,9 @@ name: mago
 
 project_files:
   - commands/web/mago
+  - commands/host/pin-mago-version
   - web-build/Dockerfile.mago
-  - config.mago.yaml
 
 removal_actions:
   - rm web-build/Dockerfile.mago
-  - rm config.mago.yaml
+  - rm commands/host/pin-mago-version

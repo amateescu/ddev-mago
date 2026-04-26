@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+#ddev-generated
+## Description: Pin mago to a specific version (or "latest" to unpin)
+## Usage: pin-mago-version <version>
+## Example: "ddev pin-mago-version 1.18.1" or "ddev pin-mago-version latest"
+
+set -euo pipefail
+
+VERSION="${1:-}"
+if [ -z "$VERSION" ]; then
+  echo "Usage: ddev pin-mago-version <version|latest>" >&2
+  exit 1
+fi
+
+DOCKERFILE="${DDEV_APPROOT}/.ddev/web-build/Dockerfile.mago"
+if [ ! -f "$DOCKERFILE" ]; then
+  echo "Error: $DOCKERFILE not found." >&2
+  exit 1
+fi
+
+if ! grep -q "ghcr.io/carthage-software/mago:" "$DOCKERFILE"; then
+  echo "Error: Dockerfile.mago no longer matches the expected pattern. Edit it manually." >&2
+  exit 1
+fi
+
+sed -i.bak -E "s|(ghcr\.io/carthage-software/mago:)[^[:space:]]+|\1${VERSION}|" "$DOCKERFILE"
+sed -i.bak '/^#ddev-generated$/d' "$DOCKERFILE"
+rm -f "${DOCKERFILE}.bak"
+
+echo "Pinned mago to ${VERSION}."
+echo "Run 'ddev restart' to apply."

@@ -86,15 +86,15 @@ teardown() {
   assert_success
 }
 
-@test "version pinning via web_environment" {
+@test "pin-mago-version pins a specific version" {
   set -eu -o pipefail
   run ddev add-on get "${DIR}"
   assert_success
   run ddev restart -y
   assert_success
 
-  # Pin an older version.
-  echo -e "web_environment:\n  - DDEV_MAGO_VERSION=1.22.0" > .ddev/config.mago-test.yaml
+  run ddev pin-mago-version 1.22.0
+  assert_success
   run ddev restart -y
   assert_success
   run ddev mago --version
